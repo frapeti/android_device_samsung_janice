@@ -1,5 +1,7 @@
 -include device/samsung/u8500-common/BoardCommonConfig.mk
 
+USE_CAMERA_STUB := true
+
 TARGET_OTA_ASSERT_DEVICE := janice,i9070,GT-I9070
 
 # Board
@@ -13,9 +15,6 @@ TARGET_BOARD_PLATFORM := montblanc
 BOARD_USES_STE_HARDWARE := true
 TARGET_SOC := u8500
 COMMON_GLOBAL_CFLAGS += -DSTE_HARDWARE -DSTE_SAMSUNG_HARDWARE
-
-# Debian multi-arch compatibility
-COMMON_GLOBAL_CFLAGS += -B/usr/lib/x86_64-linux-gnu
 
 # Partitions
 BOARD_NAND_PAGE_SIZE := 4096
@@ -36,6 +35,7 @@ BOARD_KERNEL_CMDLINE := "console=ttySAC2,115200 consoleblank=0"
 # Graphics
 BOARD_EGL_CFG := device/samsung/janice/configs/egl.cfg
 BOARD_EGL_NEEDS_LEGACY_FB := true
+COMMON_GLOBAL_CFLAGS += -DEGL_NEEDS_FNW
 COMMON_GLOBAL_CFLAGS += -DREFRESH_RATE=60
 
 # Bluetooth
