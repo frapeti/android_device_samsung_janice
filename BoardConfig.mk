@@ -1,7 +1,5 @@
 -include device/samsung/u8500-common/BoardCommonConfig.mk
 
-USE_CAMERA_STUB := true
-
 TARGET_OTA_ASSERT_DEVICE := janice,i9070,GT-I9070
 
 # Board
