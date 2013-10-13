@@ -34,7 +34,6 @@ BOARD_KERNEL_CMDLINE := "console=ttySAC2,115200 consoleblank=0"
 BOARD_EGL_CFG := device/samsung/janice/configs/egl.cfg
 BOARD_EGL_NEEDS_LEGACY_FB := true
 COMMON_GLOBAL_CFLAGS += -DEGL_NEEDS_FNW
-COMMON_GLOBAL_CFLAGS += -DREFRESH_RATE=60
 
 # Bluetooth
 BOARD_BLUETOOTH_BDROID_BUILDCFG_INCLUDE_DIR := device/samsung/janice/bluetooth
@@ -59,9 +58,6 @@ WIFI_BAND                        := 802_11_ABG
 BOARD_LEGACY_NL80211_STA_EVENTS  := true
 BOARD_NO_APSME_ATTR              := true
 
-# RIL
-BOARD_MOBILEDATA_INTERFACE_NAME := "pdp0"
-
 # Vibrator
 BOARD_HAS_VIBRATOR_IMPLEMENTATION := ../../device/samsung/janice/vibrator/vibrator.c
 
@@ -76,20 +72,3 @@ BOARD_CUSTOM_GRAPHICS := ../../../device/samsung/janice/recovery/graphics.c
 TARGET_RECOVERY_INITRC := device/samsung/janice/rootdir/recovery.rc
 TARGET_RECOVERY_FSTAB := device/samsung/janice/rootdir/fstab.samsungjanice
 RECOVERY_FSTAB_VERSION := 2
-
-# HWComposer
-BOARD_USES_HWCOMPOSER := true
-BOARD_USE_SYSFS_VSYNC_NOTIFICATION := true
-
-# Camera
-BOARD_CAMERA_HAVE_ISO := true
-COMMON_GLOBAL_CFLAGS += -DHAVE_ISO
-COMMON_GLOBAL_CFLAGS += -DSAMSUNG_CAMERA_HARDWARE
-BOARD_USES_PROPRIETARY_LIBCAMERA := true
-BOARD_USES_PROPRIETARY_LIBFIMC := true
-
-# OMX
-BOARD_NONBLOCK_MODE_PROCESS := true
-BOARD_USE_STOREMETADATA := true
-BOARD_USE_METADATABUFFERTYPE := true
-BOARD_USES_MFC_FPS := true
