@@ -73,7 +73,8 @@ BOARD_VOLD_DISC_HAS_MULTIPLE_MAJORS := true
 # Recovery
 BOARD_CUSTOM_RECOVERY_KEYMAPPING := ../../device/samsung/janice/recovery/recovery_keys.c
 BOARD_CUSTOM_GRAPHICS := ../../../device/samsung/janice/recovery/graphics.c
-TARGET_RECOVERY_INITRC := device/samsung/janice/rootdir/recovery.rc
+TARGET_RECOVERY_FSTAB := device/samsung/janice/rootdir/fstab.samsungjanice
+RECOVERY_FSTAB_VERSION := 2
 
 # HWComposer
 BOARD_USES_HWCOMPOSER := true
