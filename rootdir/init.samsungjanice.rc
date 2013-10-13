@@ -408,10 +408,6 @@ on boot
 
     chown root system sys/class/sec/gps/GPS_nRST/value
     chmod 0664 sys/class/sec/gps/GPS_nRST/value
-
-# 4.3 requires this
-
-    chmod 0644 /proc/cmdline
     
 # permissions for FMRadio of Broadcom
     chmod 0777 /system/bin/btld
