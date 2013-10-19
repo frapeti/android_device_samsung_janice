@@ -32,6 +32,3 @@ BOARD_HAS_VIBRATOR_IMPLEMENTATION := ../../device/samsung/janice/vibrator/vibrat
 BOARD_VOLD_MAX_PARTITIONS := 12
 BOARD_VOLD_EMMC_SHARES_DEV_MAJOR := true
 BOARD_VOLD_DISC_HAS_MULTIPLE_MAJORS := true
-
-# Recovery
-TARGET_RECOVERY_FSTAB := device/samsung/janice/rootdir/recovery.fstab

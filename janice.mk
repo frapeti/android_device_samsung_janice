@@ -53,11 +53,9 @@ $(call inherit-product, device/common/gps/gps_eu_supl.mk)
 # Init files
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/rootdir/fstab.samsungjanice:root/fstab.samsungjanice \
-	$(LOCAL_PATH)/rootdir/recovery.fstab:root/recovery.fstab \
     $(LOCAL_PATH)/rootdir/init.samsungjanice.rc:root/init.samsungjanice.rc \
     $(LOCAL_PATH)/rootdir/init.samsungjanice.usb.rc:root/init.samsungjanice.usb.rc \
     $(LOCAL_PATH)/rootdir/prerecovery.rc:root/prerecovery.rc \
-	$(LOCAL_PATH)/rootdir/recovery.rc:root/recovery.rc \
     $(LOCAL_PATH)/rootdir/ueventd.samsungjanice.rc:root/ueventd.samsungjanice.rc
 
 # Audio
