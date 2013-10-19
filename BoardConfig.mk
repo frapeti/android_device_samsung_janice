@@ -34,6 +34,4 @@ BOARD_VOLD_EMMC_SHARES_DEV_MAJOR := true
 BOARD_VOLD_DISC_HAS_MULTIPLE_MAJORS := true
 
 # Recovery
-BOARD_CUSTOM_RECOVERY_KEYMAPPING := ../../device/samsung/janice/recovery/recovery_keys.c
 TARGET_RECOVERY_FSTAB := device/samsung/janice/rootdir/fstab.samsungjanice
-RECOVERY_FSTAB_VERSION := 2
