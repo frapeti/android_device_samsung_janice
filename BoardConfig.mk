@@ -4,7 +4,6 @@ TARGET_OTA_ASSERT_DEVICE := janice,i9070,GT-I9070
 
 # Board
 TARGET_BOOTLOADER_BOARD_NAME := montblanc
-TARGET_BOARD_INFO_FILE := device/samsung/janice/board-info.txt
 
 # Partitions
 BOARD_NAND_PAGE_SIZE := 4096
