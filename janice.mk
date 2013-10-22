@@ -55,8 +55,7 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/rootdir/fstab.samsungjanice:root/fstab.samsungjanice \
     $(LOCAL_PATH)/rootdir/init.samsungjanice.rc:root/init.samsungjanice.rc \
     $(LOCAL_PATH)/rootdir/init.samsungjanice.usb.rc:root/init.samsungjanice.usb.rc \
-    $(LOCAL_PATH)/rootdir/prerecovery.rc:root/prerecovery.rc \
-    $(LOCAL_PATH)/rootdir/recovery.rc:root/init.recovery.janice.rc \
+    $(LOCAL_PATH)/rootdir/recovery.rc:root/init.recovery.samsungjanice.rc \
     $(LOCAL_PATH)/rootdir/ueventd.samsungjanice.rc:root/ueventd.samsungjanice.rc
 
 # Audio

@@ -1,17 +1,17 @@
-import /init.samsungjanice.usb.rc
+import init.samsungcodina.usb.rc
 
 on early-init
     export EXTERNAL_STORAGE /storage/sdcard0
     export SECONDARY_STORAGE /storage/sdcard1
+
     mkdir /storage 0775 system system
     mkdir /storage/sdcard0 0775 system system
     mkdir /storage/sdcard1 0775 system system
-    mkdir /storage/usbdisk 0775 system system
-
+    mkdir /storage/usbdisk0 0775 system system
     mkdir /efs 0771 radio system
-    mkdir /preload 0771 system system
     mkdir /modemfs 0771 system system
-    mkdir /mnt 0755 root system
+    mkdir /preload 0771 system system
+    mkdir /mnt 0775 root system
     mkdir /mnt/.lfs 0755 root root
 
     # for backwards compatibility
@@ -19,8 +19,8 @@ on early-init
     symlink /storage/sdcard0 /mnt/sdcard
     symlink /storage/sdcard1 /extSdCard
     symlink /storage/sdcard1 /mnt/extSdCard
-    symlink /storage/usbdisk /usbdisk0
-    symlink /storage/usbdisk /mnt/usbdisk0
+    symlink /storage/usbdisk0 /usbdisk0
+    symlink /storage/usbdisk0 /mnt/usbdisk0
 
 on init
 
@@ -47,10 +47,13 @@ on init
     mkdir /debug
     mount debugfs none /debug
 
+    # Prevents permission denied error for telephony
+    chmod 0644 /proc/cmdline
 
 on fs
 
-    mount_all /fstab.samsungjanice
+    mount_all /fstab.samsungcodina
+    setprop ro.crypto.fuse_sdcard false
 	
     # Start CSPSA before synchronously running the factory reset utility that
     # checks the factory reset triggers in sysfs and CSPSA and then formats
@@ -62,21 +65,6 @@ on post-fs
 
     chown radio radio /modemfs
     chmod 0771 /modemfs
-    chown radio radio /modemfs/APPL
-    mkdir /modemfs/APPL
-    chmod 0755 /modemfs/APPL
-    mkdir /modemfs/BOOT
-    chown radio radio /modemfs/BOOT
-    chmod 0755 /modemfs/BOOT
-    mkdir /modemfs/DO
-    chown radio radio /modemfs/DO
-    chmod 0755 /modemfs/DO
-    mkdir /modemfs/LOG
-    chown radio radio /modemfs/LOG
-    chmod 0755 /modemfs/LOG
-    mkdir /modemfs/TMP
-    chown radio radio /modemfs/TMP
-    chmod 0755 /modemfs/TMP
     chown radio radio /modemfs/CONF
     chmod 0755 /modemfs/CONF
     chown radio radio /modemfs/CONF/MCE
@@ -99,8 +87,7 @@ on post-fs
     chown radio system /efs/imei
     chmod 0770 /efs/imei
     chown radio system /efs/bluetooth
-    chown radio system /efs/wifi
-    mkdir /data/mediaserver 0740 media media
+    chown system system /efs/wifi
 
     # Samsung Device permissions
     chown root system /dev/mmc328x
@@ -215,23 +202,16 @@ on post-fs
 
 on post-fs-data
 
-
-    mkdir /data/media 0770 media_rw media_rw
-    chown media_rw media_rw /data/media
     # give system access to wpa_supplicant.conf for backup and restore
-    mkdir /data/misc/psdata
+
     mkdir /data/misc/bluetoothd 0770 bluetooth bluetooth
     mkdir /data/misc/bluetooth 0770 system system
     mkdir /data/misc/wifi 0770 wifi system
-    mkdir /data/misc/wifi/sockets 0770 wifi wifi
-    mkdir /data/misc/dhcp 0775 dhcp dhcp
-    mkdir /data/misc/wifi 0770 wifi system
-    chmod 0770 /data/misc/wifi
+    mkdir /efs/wifi 0775 radio system
+    mkdir /efs/bluetooth 0775 radio system
+    mkdir /efs/imei 0775 radio system
     chmod 0660 /data/misc/wifi/wpa_supplicant.conf
-    chmod 0660 /data/misc/wifi/p2p_supplicant.conf
-    mkdir /data/misc/wifi/hostapd.sockets 0770 wifi wifi
-     
-
+    mkdir /data/misc/wifi/sockets 0770 wifi wifi
     mkdir /data/misc/dhcp 0775 dhcp dhcp
     chown dhcp dhcp /data/misc/dhcp
     chown system system /efs/wifi/.mac.info
@@ -251,9 +231,6 @@ on post-fs-data
     chmod 0775 /data/log
     chmod 0775 /data/anr
 
-
-    # After we setup wireless subsystem, let dnsmasq create files for soft ap
-    chown dhcp system /data/misc/dhcp
 #[ SEC_MM_DRM
     # DRM directory creation
     mkdir /system/etc/security/.drm 0775
@@ -297,7 +274,7 @@ on post-fs-data
     chown root radio /data/misc/ril_config
 
     # Create directory for STE OMX debug logs
-    mkdir /data/ste-debug 0777 root root
+    mkdir /data/ste-debug 0775 system system
 
     # give system access to sterc_script when enabling usb nap
     copy -u /system/etc/psdata/sterc_conf /data/misc/psdata/sterc_conf
@@ -350,10 +327,6 @@ on early-boot
 
 on boot
 
-
-    # Run sysinit
-    exec /system/bin/sysinit
-
     # debugfs
     mount debugfs /sys/kernel/debug /sys/kernel/debug
 
@@ -401,14 +374,14 @@ on boot
 
 # GPS
     chown root system /dev/ttyAMA1
-    chmod 0660 dev/ttyAMA1
+    chmod 0660 /dev/ttyAMA1
+    chown root system /sys/class/sec/gps/GPS_ON_OFF/value
+    chmod 0664 /sys/class/sec/gps/GPS_ON_OFF/value
+    chown root system /sys/class/sec/gps/GPS_nRST/value
+    chmod 0664 /sys/class/sec/gps/GPS_nRST/value
+    mkdir /data/gps 771 system system
+    chown system system /data/gps
 
-    chown root system sys/class/sec/gps/GPS_ON_OFF/value
-    chmod 0664 sys/class/sec/gps/GPS_ON_OFF/value
-
-    chown root system sys/class/sec/gps/GPS_nRST/value
-    chmod 0664 sys/class/sec/gps/GPS_nRST/value
-    
 # permissions for FMRadio of Broadcom
     chmod 0777 /system/bin/btld
 
@@ -424,10 +397,10 @@ on boot
     chmod 0664 /sys/class/rfkill/rfkill0/state
     chmod 0664 /sys/class/rfkill/rfkill0/claim
     chmod 0664 /sys/class/rfkill/rfkill0/soft
+    chmod 0664 /sys/class/rfkill/rfkill0/type
     setprop service.brcm.bt.pbap_mode btld
 
 # power up/down interface
-    chmod 0660 /sys/class/rfkill/rfkill0/type
     chmod 0660 /sys/class/rfkill/rfkill0/state
     chown bluetooth net_bt_stack /sys/class/rfkill/rfkill0/state
     chown bluetooth net_bt_stack /sys/class/rfkill/rfkill0/type
@@ -438,9 +411,11 @@ on boot
     chown bluetooth bluetooth /system/etc/bt_addr
     chmod 0644 /efs/bluetooth/addr.txt
 
+    chown bluetooth /dev/ttyAMA0
+    chmod 0660 /dev/ttyAMA0
+
     # Permissions for LCD
     chown system system /sys/class/backlight/panel/brightness
-    chown system system /sys/class/backlight/panel/auto_brightness
     chown system radio /sys/class/lcd/panel/lcd_power
     chown system radio /sys/class/lcd/panel/lcd_type
     chown system media_rw /sys/class/lcd/panel/power_reduce
@@ -460,7 +435,7 @@ on boot
 
     # temp Torch workaround
     chmod 0222 /sys/class/sec/flash/enable
-    
+
     # system permissions for device parts
     chown system system /sys/module/mali/parameters/mali_l2_max_reads
     chown system system /sys/module/mali/parameters/pre_allocated_memory_size_max
@@ -469,26 +444,7 @@ on boot
     chown system system /sys/kernel/abb-charger/max_ac_c
     chown system system /sys/kernel/abb-charger/max_usb_c
     chown system system /sys/kernel/fsync/mode
-    chown system system /sys/kernel/mxt224e/sweep2wake
     chown system system /sys/module/mmc_core/parameters/use_spi_crc
-    chown system system /sys/kernel/mxt224e/threshold_t48
-    write /sys/kernel/mxt224e/threshold_t48 on
-    
-
- # Define TCP buffer sizes for various networks
- #   ReadMin, ReadInitial, ReadMax, WriteMin, WriteInitial, WriteMax,
- 
-    setprop net.tcp.buffersize.default 4096,87380,704512,4096,16384,110208
-    setprop net.tcp.buffersize.lte     4096,87380,1220608,4096,16384,563200
-    setprop net.tcp.buffersize.umts    4096,87380,563200,4096,16384,110208
-    setprop net.tcp.buffersize.hspa    4096,87380,704512,4096,16384,110208
-    setprop net.tcp.buffersize.hsupa   4096,87380,704512,4096,16384,262144
-    setprop net.tcp.buffersize.hsdpa   4096,87380,704512,4096,16384,262144
-    setprop net.tcp.buffersize.hspap   4096,87380,1220608,4096,16384,393216
-    setprop net.tcp.buffersize.edge    4096,26280,35040,4096,16384,35040
-    setprop net.tcp.buffersize.gprs    4096,8760,11680,4096,8760,11680
-    setprop net.tcp.buffersize.evdo    4096,87380,563200,4096,16384,262144
-    setprop net.tcp.buffersize.evdo_b  4096,87380,704512,4096,16384,262144
 
     # camera debug
     setprop persist.debug.extcamera.level 777
@@ -556,12 +512,6 @@ service copsd /system/bin/copsdaemon
     class modem-core
     user root
 
-service bdaddr /system/bin/bdaddr_read
-    class main
-    user root
-    disabled
-    oneshot
-
 service dbus /system/bin/dbus-daemon --system --nofork
     socket dbus stream 660 bluetooth bluetooth
     user bluetooth
@@ -614,9 +564,6 @@ service admsrv /system/bin/admsrv
     ioprio rt 4
     capability NET_ADMIN NET_RAW SYS_NICE
 
-service stedump /system/bin/stedump
-    class main
-    user root
 
 service geomagneticd /system/bin/geomagneticd6x
     user compass
@@ -642,7 +589,7 @@ service at_distributor /system/bin/at_distributor
     user root
     group radio log
 
-service watchdog-kicker /system/xbin/watchdog -d /dev/watchdog -t 120
+service watchdog-kicker /system/xbin/watchdog-kicker -d /dev/watchdog -t 120
     class main
     oneshot
 
@@ -673,41 +620,25 @@ service immvibed /system/bin/immvibed
     group shell
     oneshot
 
-service mtpd /system/bin/mtpd
-    socket mtpd stream 600 system system
-    user vpn
-    group vpn net_admin net_raw
-    disabled
-    oneshot
-
 on property:ro.dumpstate.dmesg=1
     write /proc/sys/kernel/dmesg_restrict 0
-    
-    
-service p2p_supplicant /system/bin/logwrapper /system/bin/wpa_supplicant \
-    -d -iwlan0 -Dnl80211 -c/data/misc/wifi/wpa_supplicant.conf -N \
-    -ip2p0 -Dnl80211 -c/data/misc/wifi/p2p_supplicant.conf \
-    -e/data/misc/wifi/entropy.bin -puse_p2p_group_interface=1
-    class main
-    socket wpa_wlan0 dgram 660 wifi wifi
-    disabled
-    oneshot
-    
-    
-service wpa_supplicant /system/bin/logwrapper /system/bin/wpa_supplicant \
-    -iwlan0 -Dnl80211 -c/data/misc/wifi/wpa_supplicant.conf \
-    -e/data/misc/wifi/entropy.bin
+
+service p2p_supplicant /system/bin/wpa_supplicant \
+        -iwlan0 -Dnl80211 -c/data/misc/wifi/wpa_supplicant.conf -N \
+        -ip2p0 -Dnl80211 -c/data/misc/wifi/p2p_supplicant.conf -e/data/misc/wifi/entropy.bin \
+        -puse_p2p_group_interface=1
     class main
     socket wpa_wlan0 dgram 660 wifi wifi
     disabled
     oneshot
 
-# bugreport is triggered by holding down volume down, volume up and power
-service bugreport /system/bin/dumpstate -d -v -o /sdcard/bugreports/bugreport
+service wpa_supplicant /system/bin/wpa_supplicant \
+        -Dnl80211 -iwlan0 -e/data/misc/wifi/entropy.bin \
+        -c/data/misc/wifi/wpa_supplicant.conf
     class main
+    socket wpa_wlan0 dgram 660 wifi wifi
     disabled
     oneshot
-    keycodes 114 115 116
 
 service dhcpcd_wlan0 /system/bin/dhcpcd -ABKL
     class main
@@ -719,15 +650,10 @@ service dhcpcd_p2p /system/bin/dhcpcd -aABKL
     disabled
     oneshot
 
-service dhcpcd_bnep0 /system/bin/dhcpcd -BKLG
-    # This properly enables bluetooth tethering, it asigns a IP to any conected device
+service dhcpcd_bnep0 /system/bin/dhcpcd -ABKL
     class main
     disabled
     oneshot
-
-on property:ro.data.large_tcp_window_size=true
-    # We enable receiving of high-speed conections via ipv4
-    write /proc/sys/net/ipv4/tcp_adv_win_scale  1
 
 service iprenew_wlan0 /system/bin/dhcpcd -n
     class main
@@ -743,18 +669,18 @@ service iprenew_bnep0 /system/bin/dhcpcd -n
     class main
     disabled
     oneshot
-    
-# GPS
+
 service gpsd /system/bin/gpsd -c /system/etc/gps.xml
     class main
-    socket gps seqpacket 0660 gps system
     user gps
-    group system inet sdcard_rw
+    group system net_raw
+    ioprio be 0
 
 #for WiFi MFG(TestMode)
 service mfgloader /system/bin/mfgloader
     class main
     disabled
+    oneshot
 
 service wlandutservice /system/bin/wlandutservice
     class main
@@ -762,4 +688,5 @@ service wlandutservice /system/bin/wlandutservice
     group wifi net_raw net_admin system inet
     disabled
     oneshot
+
 # end of wifi
