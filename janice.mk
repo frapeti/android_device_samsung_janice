@@ -43,6 +43,7 @@ PRODUCT_PROPERTY_OVERRIDES += \
 PRODUCT_PACKAGES += \
     GalaxySAdvanceSettings \
     CMAccount
+    Stk
 
 # Gps
 PRODUCT_COPY_FILES += \
