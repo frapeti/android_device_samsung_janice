@@ -48,6 +48,10 @@ PRODUCT_PACKAGES += \
 # Gps
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/gps.conf:system/etc/gps.conf
+    
+# Compass workaround
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/configs/compass:system/etc/init.d/compass
 
 $(call inherit-product, device/common/gps/gps_eu_supl.mk)
 
