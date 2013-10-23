@@ -14,3 +14,4 @@ BOARD_HAS_VIBRATOR_IMPLEMENTATION := ../../device/samsung/janice/vibrator/vibrat
 
 # Recovery
 TARGET_RECOVERY_FSTAB := device/samsung/janice/rootdir/fstab.samsungjanice
+TARGET_RECOVERY_INITRC := device/samsung/janice/recovery/recovery.rc
