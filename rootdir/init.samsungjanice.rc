@@ -193,7 +193,7 @@ on post-fs
     insmod /system/lib/modules/bthid.ko
 
     # AB8500 Fuelgauge initialization using PARAM capacity
-    write /sys/class/power_supply/sec-fuelgauge/reinit_cap 1
+    write /sys/class/power_supply/battery/batt_reinit_capacity 1
 
 on post-fs-data
 
